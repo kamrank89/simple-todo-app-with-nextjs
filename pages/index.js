@@ -42,8 +42,10 @@ function Home({ todos }) {
       </button> */}
       <form onSubmit={createTest}>
         <input
+          spellCheck="off"
+          placeholder="todo-items"
           type="text"
-          className="m-3 bg-blue-400"
+          className="m-3 bg-gray-400 placeholder-black placeholder-opacity-50"
           name="todo"
 
           // onClick={deleteTest}
