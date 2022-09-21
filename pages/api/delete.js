@@ -1,12 +1,10 @@
 import dbConnect from "../../DataBase/dbConnect";
-import Test from "../../Models/testModel";
-
+import Todo from "../../Models/todo";
 async function deleteData(req, res) {
   dbConnect();
-  console.log("deleting the document");
-  const testmodel = await Test.deleteOne(req.body);
-  console.log(req.body);
-  console.log("deleted the document");
+
+  const testmodel = await Todo.deleteOne(req.body);
+
   res.json({ testmodel });
 }
 

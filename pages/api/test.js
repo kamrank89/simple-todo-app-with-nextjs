@@ -1,12 +1,11 @@
 import dbConnect from "../../DataBase/dbConnect";
-import Test from "../../Models/testModel";
+import Todo from "../../Models/todo";
 
 async function addData(req, res) {
   dbConnect();
-  console.log("creating the document");
-  const testmodel = await Test.create(req.body);
-  console.log(req.body);
-  console.log("created the document");
+
+  const testmodel = await Todo.create(req.body);
+  console.log(testmodel);
   res.json({ testmodel });
 }
 

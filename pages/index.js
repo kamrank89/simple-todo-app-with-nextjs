@@ -1,23 +1,24 @@
 import dbConnect from "../DataBase/dbConnect";
-import Test from "../Models/testModel";
 import { useRouter } from "next/router";
+import Todo from "../Models/todo";
 
-function Home({ tests }) {
+function Home({ todos }) {
   const router = useRouter();
-  const createTest = async () => {
-    const randomNum = Math.floor(Math.random() * 1000);
-    const res = await fetch("api/test", {
+  const createTest = async (e) => {
+    const data = e.target.todo.value;
+    console.log(data);
+
+    const res = await fetch("/api/test", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: `test${randomNum}`,
-        email: `test${randomNum}@gmail.com`,
+        name: data,
       }),
     });
-    const data = await res.json();
-    console.log(data);
+    const result = await res.json();
+
     router.reload();
   };
   const deleteTest = async () => {
@@ -28,36 +29,40 @@ function Home({ tests }) {
       },
 
       body: JSON.stringify({
-        _id: tests._id,
+        _id: todos._id,
       }),
     });
-    const data = await res.json();
-    console.log(data);
+
     router.reload();
   };
   return (
     <div>
-      <button className="bg-gray-300 rounded m-24" onClick={createTest}>
+      {/* <button className="bg-gray-300 rounded m-24" onClick={createTest}>
         Create a Test
-      </button>
-      <input
-        type="text"
-        className="m-3 bg-blue-400"
-        // value={test._id}
-        // onClick={deleteTest}
-      />
+      </button> */}
+      <form onSubmit={createTest}>
+        <input
+          type="text"
+          className="m-3 bg-blue-400"
+          name="todo"
 
-      {tests.map((test) => (
-        <div className="flex text-green-400" key={test._id}>
+          // onClick={deleteTest}
+        />
+        <button className="bg-gray-300 rounded m-24" type="submit">
+          Submit
+        </button>
+      </form>
+
+      {todos.map((todo) => (
+        <div className="flex text-green-400" key={todo._id}>
           <input
             type="checkbox"
             className="m-3"
-            value={test._id}
+            value={todo._id}
             onClick={deleteTest}
           />
-          <h1 className="m-3 text-green-800">Name: {test.name}</h1>
+          <h1 className="m-3 text-green-800">Name: {todo.name}</h1>
           <br></br>
-          <p className="m-3 text-blue-800"> Email: {test.email}</p>
         </div>
       ))}
     </div>
@@ -66,11 +71,9 @@ function Home({ tests }) {
 
 export async function getServerSideProps() {
   await dbConnect();
-  console.log("finding the document");
-  const tests = await Test.find({});
-  console.log(tests);
-  console.log("found the document");
 
-  return { props: { tests: JSON.parse(JSON.stringify(tests)) } };
+  const todos = await Todo.find({});
+
+  return { props: { todos: JSON.parse(JSON.stringify(todos)) } };
 }
 export default Home;
